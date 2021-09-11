@@ -42,6 +42,7 @@ func (s *shoterWindows) Capture() (string, error) {
 	}
 
 	// TODO: どうすれば保存されたスクショのパスを取得できるか。一旦固定
+	// 案１：ここで、標準入力受け取る処理をして、ユーザーからスクショのパスをもらう
 	dir := `C:\Users\lbfde\OneDrive\画像\スクリーンショット`
 	name := "キャプチャ.PNG"
 	return filepath.Join(dir, name), nil
