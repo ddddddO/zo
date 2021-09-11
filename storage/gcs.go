@@ -14,15 +14,27 @@ import (
 )
 
 type gcs struct {
-	client *storage.Client
-
+	client     *storage.Client
 	bucketName string
 }
 
 // ref: https://developers.google.com/accounts/docs/application-default-credentials
-func NewGCS(bucketName string, credentialADCPath string) *gcs {
+func NewGCSWithCredential(bucketName string, credentialADCPath string) *gcs {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx, option.WithCredentialsFile(credentialADCPath))
+	if err != nil {
+		panic(err)
+	}
+
+	return &gcs{
+		client:     client,
+		bucketName: bucketName,
+	}
+}
+
+func NewGCS(bucketName string) *gcs {
+	ctx := context.Background()
+	client, err := storage.NewClient(ctx)
 	if err != nil {
 		panic(err)
 	}

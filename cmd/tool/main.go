@@ -15,7 +15,7 @@ func main() {
 		adcpath = `\\wsl$\Debian\home\ochi\.config\gcloud\legacy_credentials\lbfdeatq@gmail.com\adc.json`
 	)
 	sh := screenshoter.New()
-	st := storage.NewGCS(gcsBucket, adcpath)
+	st := storage.NewGCSWithCredential(gcsBucket, adcpath)
 	ex := executor.New(sh, st)
 
 	if err := ex.Execute(); err != nil {
