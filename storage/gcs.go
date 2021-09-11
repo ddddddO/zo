@@ -10,6 +10,7 @@ import (
 
 	"cloud.google.com/go/storage"
 	"github.com/pkg/errors"
+	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 )
 
@@ -76,6 +77,32 @@ func (s *gcs) GetURL(hashedFileName string) (string, error) {
 		return "", errors.WithStack(err)
 	}
 	return u.String(), nil
+}
+
+// TODO: urlのみでなくてもっと取得できるようなデータあるならそれも返せばいいかも
+func (s *gcs) GetURLs() ([]string, error) {
+	bkt := s.client.Bucket(s.bucketName)
+	ctx := context.Background()
+	query := &storage.Query{Prefix: ""}
+
+	var urls []string
+	// ref: https://pkg.go.dev/cloud.google.com/go/storage#hdr-Listing_objects
+	it := bkt.Objects(ctx, query)
+	for {
+		attrs, err := it.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		url, err := s.GetURL(attrs.Name)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		urls = append(urls, url)
+	}
+	return urls, nil
 }
 
 func (s *gcs) Close() error {
