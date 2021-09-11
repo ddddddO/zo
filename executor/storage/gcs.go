@@ -20,7 +20,6 @@ type gcs struct {
 }
 
 // ref: https://developers.google.com/accounts/docs/application-default-credentials
-// 使うには、「次の例に示すように、サービス アカウント ファイルを明示的に参照するコードを使用することもできます。以下のサンプルを実行するには、Cloud Storage クライアント ライブラリをインストールする必要があります。」
 func NewGCS(bucketName string, credentialADCPath string) *gcs {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx, option.WithCredentialsFile(credentialADCPath))
