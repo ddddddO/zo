@@ -4,8 +4,8 @@ import (
 	"log"
 
 	"github.com/ddddddO/zo/executor"
-	"github.com/ddddddO/zo/executor/screenshoter"
-	"github.com/ddddddO/zo/executor/storage"
+	"github.com/ddddddO/zo/screenshoter"
+	"github.com/ddddddO/zo/storage"
 )
 
 func main() {
