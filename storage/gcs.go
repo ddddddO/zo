@@ -80,12 +80,12 @@ func (s *gcs) GetURL(hashedFileName string) (string, error) {
 }
 
 // TODO: urlのみでなくてもっと取得できるようなデータあるならそれも返せばいいかも
-func (s *gcs) GetURLs() ([]string, error) {
+func (s *gcs) GetAttrs() ([][4]string, error) {
 	bkt := s.client.Bucket(s.bucketName)
 	ctx := context.Background()
 	query := &storage.Query{Prefix: ""}
 
-	var urls []string
+	var ret [][4]string
 	// ref: https://pkg.go.dev/cloud.google.com/go/storage#hdr-Listing_objects
 	it := bkt.Objects(ctx, query)
 	for {
@@ -100,9 +100,15 @@ func (s *gcs) GetURLs() ([]string, error) {
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
-		urls = append(urls, url)
+		// name/url/owner/created
+		var attr = [4]string{}
+		attr[0] = attrs.Name
+		attr[1] = url
+		attr[2] = attrs.Owner
+		attr[3] = attrs.Created.String()
+		ret = append(ret, attr)
 	}
-	return urls, nil
+	return ret, nil
 }
 
 func (s *gcs) Close() error {
