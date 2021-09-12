@@ -1,4 +1,4 @@
-package executor
+package tool
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Screenshoter interface {
+type screenshoter interface {
 	Capture() (filepath string, err error)
 }
 
@@ -17,11 +17,11 @@ type storage interface {
 }
 
 type executor struct {
-	shoter  Screenshoter
+	shoter  screenshoter
 	storage storage
 }
 
-func New(shoter Screenshoter, storage storage) *executor {
+func NewExecutor(shoter screenshoter, storage storage) *executor {
 	return &executor{
 		shoter:  shoter,
 		storage: storage,

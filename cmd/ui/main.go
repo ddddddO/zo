@@ -10,12 +10,11 @@ import (
 )
 
 var (
-	bucketName string
-	gcs        storage
+	gcs storage
 )
 
 func init() {
-	bucketName = os.Getenv("BUCKET_NAME")
+	bucketName := os.Getenv("BUCKET_NAME")
 	if bucketName == "" {
 		log.Fatal("Not setup BUCKET_NAME")
 	}
@@ -35,14 +34,14 @@ func main() {
 	}
 	log.Printf("Listening on port %s", port)
 
-	http.HandleFunc("/", indexHandler(bucketName, gcs))
+	http.HandleFunc("/", indexHandler(gcs))
 
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func indexHandler(bucketName string, gcs storage) http.HandlerFunc {
+func indexHandler(gcs storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			w.WriteHeader(http.StatusMethodNotAllowed)

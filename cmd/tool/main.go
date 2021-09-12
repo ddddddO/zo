@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/ddddddO/zo/executor"
 	"github.com/ddddddO/zo/screenshoter"
 	"github.com/ddddddO/zo/storage"
+	"github.com/ddddddO/zo/tool"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	)
 	sh := screenshoter.New()
 	st := storage.NewGCSWithCredential(gcsBucket, adcpath)
-	ex := executor.New(sh, st)
+	ex := tool.NewExecutor(sh, st)
 
 	if err := ex.Execute(); err != nil {
 		log.Fatalf("%+v", err)
