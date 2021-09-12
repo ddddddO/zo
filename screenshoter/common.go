@@ -3,9 +3,11 @@ package screenshoter
 import (
 	"runtime"
 	"time"
-
-	"github.com/ddddddO/zo/executor"
 )
+
+type screenshoter interface {
+	Capture() (filepath string, err error)
+}
 
 // ref: https://github.com/migueldemoura/myazo/blob/1c191360eb00ac30f5039828b26933b112a6f542/client/src/myazo.py#L37-L51
 var cmds = map[string]string{
@@ -14,7 +16,7 @@ var cmds = map[string]string{
 	"linux":   "gnome-screenshot",
 }
 
-func New(options ...optFunc) executor.Screenshoter {
+func New(options ...optFunc) screenshoter {
 	option := &option{}
 	for _, opt := range options {
 		opt(option)
