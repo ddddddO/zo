@@ -20,7 +20,11 @@ func init() {
 	}
 
 	// TODO: cloud runのこのサービス専用サービスアカウント作ってそれでgcsにアクセスするようにする。
-	gcs = zoStorage.NewGCS(bucketName)
+	var err error
+	gcs, err = zoStorage.NewGCS(bucketName)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 type storage interface {
@@ -52,7 +56,7 @@ func indexHandler(gcs storage) http.HandlerFunc {
 		attrs, err := gcs.GetAttrs()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprint(w, "failed to GeAttrs")
+			fmt.Fprint(w, "failed to GetAttrs")
 			return
 		}
 

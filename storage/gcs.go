@@ -20,30 +20,30 @@ type gcs struct {
 }
 
 // ref: https://developers.google.com/accounts/docs/application-default-credentials
-func NewGCSWithCredential(bucketName string, credentialADCPath string) *gcs {
+func NewGCSWithCredential(bucketName string, credentialADCPath string) (*gcs, error) {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx, option.WithCredentialsFile(credentialADCPath))
 	if err != nil {
-		panic(err)
+		return nil, errors.WithStack(err)
 	}
 
 	return &gcs{
 		client:     client,
 		bucketName: bucketName,
-	}
+	}, nil
 }
 
-func NewGCS(bucketName string) *gcs {
+func NewGCS(bucketName string) (*gcs, error) {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx)
 	if err != nil {
-		panic(err)
+		return nil, errors.WithStack(err)
 	}
 
 	return &gcs{
 		client:     client,
 		bucketName: bucketName,
-	}
+	}, nil
 }
 
 func (s *gcs) Upload(filepath string) (string, error) {

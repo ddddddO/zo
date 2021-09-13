@@ -3,6 +3,8 @@ package screenshoter
 import (
 	"runtime"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 type screenshoter interface {
@@ -16,7 +18,9 @@ var cmds = map[string]string{
 	"linux":   "gnome-screenshot",
 }
 
-func New(options ...optFunc) screenshoter {
+var ErrNoImpl = errors.New("implementation is not exsist")
+
+func New(options ...optFunc) (screenshoter, error) {
 	option := &option{}
 	for _, opt := range options {
 		opt(option)
@@ -24,17 +28,20 @@ func New(options ...optFunc) screenshoter {
 
 	switch runtime.GOOS {
 	case "windows":
-		shoter := newShoterWindows(cmds[runtime.GOOS])
+		shoter, err := newShoterWindows(cmds[runtime.GOOS])
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
 		shoter.withTimeout(option.timeout)
-		return shoter
+		return shoter, nil
 	case "darwin":
 		// TODO:
-		panic("not yet supported!")
+		return nil, ErrNoImpl
 	case "linux":
 		// TODO:
-		panic("not yet supported!")
+		return nil, ErrNoImpl
 	default:
-		panic("not supported!")
+		return nil, ErrNoImpl
 	}
 }
 

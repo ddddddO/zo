@@ -14,8 +14,14 @@ func main() {
 		// TODO: ユーザー毎に取得するようにする
 		adcpath = `\\wsl$\Debian\home\ochi\.config\gcloud\legacy_credentials\lbfdeatq@gmail.com\adc.json`
 	)
-	sh := screenshoter.New()
-	st := storage.NewGCSWithCredential(gcsBucket, adcpath)
+	sh, err := screenshoter.New()
+	if err != nil {
+		log.Fatalf("%+v", err)
+	}
+	st, err := storage.NewGCSWithCredential(gcsBucket, adcpath)
+	if err != nil {
+		log.Fatalf("%+v", err)
+	}
 	ex := tool.NewExecutor(sh, st)
 
 	if err := ex.Execute(); err != nil {

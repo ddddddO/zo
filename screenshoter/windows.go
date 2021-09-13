@@ -14,14 +14,14 @@ type shoterWindows struct {
 	timeout time.Duration
 }
 
-func newShoterWindows(cmd string) *shoterWindows {
+func newShoterWindows(cmd string) (*shoterWindows, error) {
 	if _, err := exec.LookPath(cmd); err != nil {
-		panic(err)
+		return nil, errors.WithStack(err)
 	}
 
 	return &shoterWindows{
 		cmd: cmd,
-	}
+	}, nil
 }
 
 func (s *shoterWindows) withTimeout(t time.Duration) {
