@@ -2,6 +2,7 @@ package screenshoter
 
 import (
 	"context"
+	"fmt"
 	"os/exec"
 	"path/filepath"
 	"time"
@@ -29,6 +30,8 @@ func (s *shoterWindows) withTimeout(t time.Duration) {
 }
 
 func (s *shoterWindows) Capture() (string, error) {
+	fmt.Println("Input screenshoted file path:")
+
 	ctx := context.Background()
 	if s.timeout != 0 {
 		var cancel context.CancelFunc
@@ -41,9 +44,13 @@ func (s *shoterWindows) Capture() (string, error) {
 		return "", errors.WithStack(err)
 	}
 
-	// TODO: どうすれば保存されたスクショのパスを取得できるか。一旦固定
-	// 案１：ここで、標準入力受け取る処理をして、ユーザーからスクショのパスをもらう
-	dir := `C:\Users\lbfde\OneDrive\画像\スクリーンショット`
-	name := "キャプチャ.PNG"
-	return filepath.Join(dir, name), nil
+	// NOTE: ユーザーからスクショのパスをもらう
+	var p string
+	fmt.Scanln(&p)
+	path, err := filepath.Abs(p)
+	if err != nil {
+		return "", errors.New("file path is not absolute")
+	}
+
+	return path, nil
 }
