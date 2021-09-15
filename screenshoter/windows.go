@@ -47,9 +47,9 @@ func (s *shoterWindows) Capture() (string, error) {
 	// NOTE: ユーザーからスクショのパスをもらう
 	var p string
 	fmt.Scanln(&p)
-	path, err := filepath.Abs(p)
+	path, err := filepath.Abs(p) // FIXME:
 	if err != nil {
-		return "", errors.New("file path is not absolute")
+		return "", errors.WithStack(err)
 	}
 
 	return path, nil

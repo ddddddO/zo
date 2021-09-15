@@ -79,7 +79,6 @@ func (s *gcs) GetURL(hashedFileName string) (string, error) {
 	return u.String(), nil
 }
 
-// TODO: urlのみでなくてもっと取得できるようなデータあるならそれも返せばいいかも
 func (s *gcs) GetAttrs() ([][4]string, error) {
 	bkt := s.client.Bucket(s.bucketName)
 	ctx := context.Background()
